@@ -2,7 +2,7 @@
 
 {{ forms.textField({
     label: "Default Value"|t('app'),
-    instructions: "The initial default value for the field."|t('app'),
+    instructions: "The initial value for the field."|t('app'),
     id: 'defaultValue',
     name: 'defaultValue',
     value: field.defaultValue,
@@ -10,7 +10,7 @@
 }) }}
 
 {{ forms.checkboxField({
-    label: "Revert to default value if the field is submitted without a value."|t('app'),
+    label: "Revert to default value if the field is submitted empty."|t('app'),
     name: 'revertToDefault',
     checked: field.revertToDefault,
 }) }}
