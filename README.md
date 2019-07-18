@@ -10,6 +10,14 @@ This plugin requires Craft CMS 3.0.0 or later.
 
 You can install the plugin via the Craft Plugin Store.
 
+## LJ Default Text Overview
+
+This plugin adds the following fieldtype:
+
+- Plain Text (with default value)
+
+![Screenshot](resources/img/1.png)
+
 ---
 
 Brought to you by [Lewis Jenkins](https://lj.io)
