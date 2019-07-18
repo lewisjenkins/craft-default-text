@@ -1,4 +1,4 @@
-# Craft Default Text plugin for Craft CMS 3.x
+# LJ Default Text plugin for Craft CMS 3.x
 
 Adds a Default Value setting to the Plain Text field.
 

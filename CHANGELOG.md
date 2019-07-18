@@ -1,4 +1,4 @@
-# Craft Default Text Changelog
+# LJ Default Text Changelog
 
 All notable changes to this project will be documented in this file.
 
