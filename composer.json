@@ -1,0 +1,40 @@
+{
+    "name": "lewisjenkins/craft-default-text",
+    "description": "Set default text.",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "craft default text"
+    ],
+    "support": {
+        "docs": "???",
+        "issues": "???"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lewis Jenkins",
+            "homepage": "https://lj.io"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "lewisjenkins\\craftdefaulttext\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Craft Default Text",
+        "handle": "craft-default-text",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "???",
+        "class": "lewisjenkins\\craftdefaulttext\\CraftDefaultText"
+    }
+}
