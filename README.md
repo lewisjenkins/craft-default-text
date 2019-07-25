@@ -34,7 +34,7 @@ You can also grab a value from a template file.
 
 ![Screenshot](resources/img/4.png)
 
-Finally, there is an setting to _Revert to default value if the field is submitted empty._ If the user submits an empty field then the initial default value will magically reappear.
+Finally, there is a setting to _Revert to default value if the field is submitted empty._ If the user submits an empty field then the initial default value will be submitted instead.
 
 ---
 
