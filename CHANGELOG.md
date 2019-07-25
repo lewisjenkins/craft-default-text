@@ -16,7 +16,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Update licence
 
-
 ## 1.0.0 - 2019-07-16
 ### Added
 - Initial release

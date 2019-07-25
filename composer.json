@@ -8,14 +8,15 @@
         "cms",
         "craftcms",
         "craft-plugin",
-        "craft default text"
+        "craft default text",
+        "lj default text"
     ],
     "support": {
         "docs": "https://github.com/lewisjenkins/craft-default-text/blob/master/README.md",
         "issues": "https://github.com/lewisjenkins/craft-default-text/issues",
         "email": "lewis@lj.io"
     },
-    "license": "MIT",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Lewis Jenkins",
