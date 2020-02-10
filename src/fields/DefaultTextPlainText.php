@@ -27,15 +27,6 @@ class DefaultTextPlainText extends PlainText
         );
     }
     
-    public function normalizeValue($value, ElementInterface $element = null)
-    {	
-		if ($this->isFresh($element) ) {
-			$value = $this->getRenderedValue($this->defaultValue);
-		};
-	    
-        return $value !== '' ? $value : null;
-    }
-    
     public function serializeValue($value, ElementInterface $element = null)
     {	
 		if ($value == '' and $this->revertToDefault) {
@@ -48,6 +39,10 @@ class DefaultTextPlainText extends PlainText
     public function getInputHtml($value, ElementInterface $element = null): string
     {	
 		$this->placeholder = $this->getRenderedValue($this->placeholder);
+		
+		if ($this->isFresh($element) ) {
+			$value = $this->getRenderedValue($this->defaultValue);
+		};
 	    
         return Craft::$app->getView()->renderTemplate('craft-default-text/_components/fields/DefaultTextPlainText_input',
             [
