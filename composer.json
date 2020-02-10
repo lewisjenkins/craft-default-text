@@ -2,7 +2,7 @@
     "name": "lewisjenkins/craft-default-text",
     "description": "Adds a Default Value setting to the Plain Text field.",
     "type": "craft-plugin",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "keywords": [
         "craft",
         "cms",
