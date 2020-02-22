@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Minor bug fix
 
+## 1.0.4 - 2019-07-17
+### Changed
+- Minor bug fix
+
 ## 1.0.3 - 2019-07-17
 ### Changed
 - Update licence
