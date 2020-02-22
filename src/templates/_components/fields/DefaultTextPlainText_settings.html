@@ -1,12 +1,14 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField({
+{{ forms.textareaField({
     label: "Default Value"|t('app'),
     instructions: "The initial value for the field."|t('app'),
     id: 'defaultValue',
     name: 'defaultValue',
     value: field.defaultValue,
-    errors: field.getErrors('defaultValue')
+    class: 'nicetext',
+    errors: field.getErrors('defaultValue'),
+    rows: 1
 }) }}
 
 {{ forms.checkboxField({
