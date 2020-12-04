@@ -6,6 +6,7 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\fields\PlainText;
+use LitEmoji\LitEmoji;
 
 class DefaultTextPlainText extends PlainText
 {
@@ -31,25 +32,42 @@ class DefaultTextPlainText extends PlainText
     {	
 		if ($value == '' and $this->revertToDefault) {
 			$value = $this->getRenderedValue($this->defaultValue);
-		};
+        };
+        
+        if ($value !== null) {
+            $value = LitEmoji::unicodeToShortcode($value);
+        }
 		
 		return $value;
     }
-    
-    public function getInputHtml($value, ElementInterface $element = null): string
-    {	
-		$this->placeholder = $this->getRenderedValue($this->placeholder);
-		
-		if ($this->isFresh($element) ) {
-			$value = $this->getRenderedValue($this->defaultValue);
-		};
-	    
-        return Craft::$app->getView()->renderTemplate('craft-default-text/_components/fields/DefaultTextPlainText_input',
-            [
-                'name' => $this->handle,
-                'value' => $value,
-                'field' => $this,
-            ]);
+
+    public function normalizeValue($value, ElementInterface $element = null)
+    {
+
+        if ($value === null) {
+            if ($this->defaultValue !== null && $this->isFresh($element)) {
+                $value = $this->getRenderedValue($this->defaultValue);
+            }
+        }
+
+        if ($value !== null) {
+            $value = LitEmoji::shortcodeToUnicode($value);
+            $value = trim(preg_replace('/\R/u', "\n", $value));
+        }
+
+        return $value !== '' ? $value : null;
+    }
+
+    protected function inputHtml($value, ElementInterface $element = null): string
+    {
+
+        $this->placeholder = $this->getRenderedValue($this->placeholder);
+
+        return Craft::$app->getView()->renderTemplate('_components/fieldtypes/PlainText/input', [
+            'name' => $this->handle,
+            'value' => $value,
+            'field' => $this,
+        ]);
     }
     
     private function getRenderedValue($field, ElementInterface $element = null)
