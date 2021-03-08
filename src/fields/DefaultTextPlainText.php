@@ -49,7 +49,9 @@ class DefaultTextPlainText extends PlainText
     protected function inputHtml($value, ElementInterface $element = null): string
     {
 
-        $this->placeholder = $this->getRenderedValue($this->placeholder);
+        if ($this->placeholder !== null) {
+            $this->placeholder = $this->getRenderedValue($this->placeholder);
+        }
 
         return Craft::$app->getView()->renderTemplate('_components/fieldtypes/PlainText/input', [
             'id' => Html::id($this->handle),
