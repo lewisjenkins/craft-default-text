@@ -58,6 +58,7 @@ class DefaultTextPlainText extends PlainText
             'name' => $this->handle,
             'value' => $value,
             'field' => $this,
+            'orientation' => $this->getOrientation($element),
         ]);
     }
 
