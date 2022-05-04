@@ -19,7 +19,7 @@ class DefaultTextPlainText extends PlainText
     public $defaultValue;
     public $revertToDefault = false;
 
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate(
             'craft-default-text/_components/fields/DefaultTextPlainText_settings',
@@ -29,7 +29,7 @@ class DefaultTextPlainText extends PlainText
         );
     }
 
-    public function normalizeValue($value, ElementInterface $element = null)
+    public function normalizeValue($value, ElementInterface $element = null): mixed
     {
 
         if ($value === null) {
@@ -62,7 +62,7 @@ class DefaultTextPlainText extends PlainText
         ]);
     }
 
-    public function serializeValue($value, ElementInterface $element = null)
+    public function serializeValue($value, ElementInterface $element = null): mixed
     {
         if ($value == '' and $this->revertToDefault) {
             $value = $this->getRenderedValue($this->defaultValue);
