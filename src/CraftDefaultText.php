@@ -1,54 +1,93 @@
 <?php
 
-namespace lewisjenkins\craftdefaulttext;
-
-use lewisjenkins\craftdefaulttext\fields\DefaultTextPlainText as DefaultTextPlainTextField;
+namespace lewisjenkins\craftdefaulttext\fields;
 
 use Craft;
-use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
-use craft\services\Fields;
-use craft\events\RegisterComponentTypesEvent;
+use craft\base\ElementInterface;
+use craft\base\Field;
+use craft\fields\PlainText;
+use LitEmoji\LitEmoji;
+use craft\helpers\Html;
 
-use yii\base\Event;
-
-class CraftDefaultText extends Plugin
+class DefaultTextPlainText extends PlainText
 {
-    public static $plugin;
-
-    public $schemaVersion = '1.0.0';
-
-    public function init()
+    public static function displayName(): string
     {
-        parent::init();
-        self::$plugin = $this;
+        return Craft::t('craft-default-text', parent::displayName() . ' (with default value)');
+    }
 
-        Event::on(
-            Fields::class,
-            Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = DefaultTextPlainTextField::class;
-            }
-        );
+    public $defaultValue;
+    public $revertToDefault = false;
 
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                }
-            }
-        );
-
-        Craft::info(
-            Craft::t(
-                'craft-default-text',
-                '{name} plugin loaded',
-                ['name' => $this->name]
-            ),
-            __METHOD__
+    public function getSettingsHtml(): ?string
+    {
+        return Craft::$app->getView()->renderTemplate(
+            'craft-default-text/_components/fields/DefaultTextPlainText_settings',
+            [
+                'field' => $this,
+            ]
         );
     }
 
+    public function normalizeValue($value, ElementInterface $element = null): mixed
+    {
+
+        if ($value === null) {
+            if ($this->defaultValue !== null && $this->isFresh($element)) {
+                $value = $this->getRenderedValue($this->defaultValue);
+            }
+        }
+
+        if ($value !== null) {
+            $value = LitEmoji::shortcodeToUnicode($value);
+            $value = trim(preg_replace('/\R/u', "\n", $value));
+        }
+
+        return $value !== '' ? $value : null;
+    }
+
+    protected function inputHtml($value, ElementInterface $element = null): string
+    {
+
+        if ($this->placeholder !== null) {
+            $this->placeholder = $this->getRenderedValue($this->placeholder);
+        }
+
+        return Craft::$app->getView()->renderTemplate('_components/fieldtypes/PlainText/input', [
+            'id' => Html::id($this->handle),
+            'name' => $this->handle,
+            'value' => $value,
+            'field' => $this,
+            'orientation' => $this->getOrientation($element),
+        ]);
+    }
+
+    public function serializeValue($value, ElementInterface $element = null): mixed
+    {
+        if ($value == '' and $this->revertToDefault) {
+            $value = $this->getRenderedValue($this->defaultValue);
+        };
+
+        if ($value !== null) {
+            $value = LitEmoji::unicodeToShortcode($value);
+        }
+
+        return $value;
+    }
+
+    private function getRenderedValue($field, ElementInterface $element = null)
+    {
+        $view = Craft::$app->getView();
+        $templateMode = $view->getTemplateMode();
+        $view->setTemplateMode($view::TEMPLATE_MODE_SITE);
+
+        $variables['element'] = $element;
+        $variables['this'] = $this;
+
+        $field = $view->renderString($field, $variables);
+
+        $view->setTemplateMode($templateMode);
+
+        return $field;
+    }
 }
