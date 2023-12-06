@@ -4,10 +4,8 @@ namespace lewisjenkins\craftdefaulttext\fields;
 
 use Craft;
 use craft\base\ElementInterface;
-use craft\base\Field;
 use craft\fields\PlainText;
-use LitEmoji\LitEmoji;
-use craft\helpers\Html;
+use craft\helpers\StringHelper;
 
 class DefaultTextPlainText extends PlainText
 {
@@ -19,17 +17,20 @@ class DefaultTextPlainText extends PlainText
     public $defaultValue;
     public $revertToDefault = false;
 
-    public function getSettingsHtml(): ?string
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
-        return Craft::$app->getView()->renderTemplate(
-            'craft-default-text/_components/fields/DefaultTextPlainText_settings',
-            [
-                'field' => $this,
-            ]
-        );
+        return $this->_normalizeValueInternal($value, $element, false);
     }
 
-    public function normalizeValue($value, ElementInterface $element = null): mixed
+    /**
+     * @inheritdoc
+     */
+    public function normalizeValueFromRequest(mixed $value, ?ElementInterface $element = null): mixed
+    {
+        return $this->_normalizeValueInternal($value, $element, true);
+    }
+
+    private function _normalizeValueInternal(mixed $value, ?ElementInterface $element, bool $fromRequest): mixed
     {
 
         if ($value === null) {
@@ -38,40 +39,36 @@ class DefaultTextPlainText extends PlainText
             }
         }
 
+
         if ($value !== null) {
-            $value = LitEmoji::shortcodeToUnicode($value);
+            if (!$fromRequest) {
+                $value = StringHelper::unescapeShortcodes(StringHelper::shortcodesToEmoji($value));
+            }
+
             $value = trim(preg_replace('/\R/u', "\n", $value));
         }
 
         return $value !== '' ? $value : null;
     }
 
-    protected function inputHtml($value, ElementInterface $element = null): string
+    public function getSettingsHtml(): ?string
     {
-
-        if ($this->placeholder !== null) {
-            $this->placeholder = $this->getRenderedValue($this->placeholder);
-        }
-
-        return Craft::$app->getView()->renderTemplate('_components/fieldtypes/PlainText/input', [
-            'id' => Html::id($this->handle),
-            'name' => $this->handle,
-            'value' => $value,
-            'field' => $this,
-            'orientation' => $this->getOrientation($element),
-        ]);
+        return Craft::$app->getView()->renderTemplate('craft-default-text/_components/fields/DefaultTextPlainText_settings',
+            [
+                'field' => $this,
+            ]);
     }
 
-    public function serializeValue($value, ElementInterface $element = null): mixed
+    public function serializeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
-        if ($value == '' and $this->revertToDefault) {
-            $value = $this->getRenderedValue($this->defaultValue);
-        };
 
-        if ($value !== null) {
-            $value = LitEmoji::unicodeToShortcode($value);
+        if ($value === null and $this->revertToDefault) {
+            $value = $this->getRenderedValue($this->defaultValue);
         }
 
+        if ($value !== null && !Craft::$app->getDb()->getSupportsMb4()) {
+            $value = StringHelper::emojiToShortcodes(StringHelper::escapeShortcodes($value));
+        }
         return $value;
     }
 
