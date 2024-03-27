@@ -17,15 +17,20 @@ class DefaultTextPlainText extends PlainText
     public $defaultValue;
     public $revertToDefault = false;
 
-    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
+    public function getSettingsHtml(): ?string
+    {
+        return Craft::$app->getView()->renderTemplate('craft-default-text/_components/fields/DefaultTextPlainText_settings',
+            [
+                'field' => $this,
+            ]);
+    }
+
+    public function normalizeValue(mixed $value, ?ElementInterface $element): mixed
     {
         return $this->_normalizeValueInternal($value, $element, false);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function normalizeValueFromRequest(mixed $value, ?ElementInterface $element = null): mixed
+    public function normalizeValueFromRequest(mixed $value, ?ElementInterface $element): mixed
     {
         return $this->_normalizeValueInternal($value, $element, true);
     }
@@ -38,8 +43,7 @@ class DefaultTextPlainText extends PlainText
                 $value = $this->getRenderedValue($this->defaultValue);
             }
         }
-
-
+        
         if ($value !== null) {
             if (!$fromRequest) {
                 $value = StringHelper::unescapeShortcodes(StringHelper::shortcodesToEmoji($value));
@@ -51,21 +55,12 @@ class DefaultTextPlainText extends PlainText
         return $value !== '' ? $value : null;
     }
 
-    public function getSettingsHtml(): ?string
+    public function serializeValue(mixed $value, ?ElementInterface $element): mixed
     {
-        return Craft::$app->getView()->renderTemplate('craft-default-text/_components/fields/DefaultTextPlainText_settings',
-            [
-                'field' => $this,
-            ]);
-    }
-
-    public function serializeValue(mixed $value, ?ElementInterface $element = null): mixed
-    {
-
         if ($value === null and $this->revertToDefault) {
             $value = $this->getRenderedValue($this->defaultValue);
         }
-
+        
         if ($value !== null && !Craft::$app->getDb()->getSupportsMb4()) {
             $value = StringHelper::emojiToShortcodes(StringHelper::escapeShortcodes($value));
         }
@@ -87,4 +82,5 @@ class DefaultTextPlainText extends PlainText
 
         return $field;
     }
+
 }
